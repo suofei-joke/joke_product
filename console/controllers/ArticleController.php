@@ -15,17 +15,6 @@ use yii\web\NotFoundHttpException;
 
 class ArticleController extends Controller
 {
-    public function actionTest()
-    {
-        $gather = new Gather();
-        $gather->name = 'a';
-        $gather->category = 'b';
-        $gather->url = 'c';
-        $gather->url_org = 'd';
-        $gather->res = 0;
-        $gather->result = 'e';
-        $gather->save();
-    }
     public function actionRun($name)
     {
         $className = '\console\models\\'.ucfirst(strtolower($name)) . 'Spider';
