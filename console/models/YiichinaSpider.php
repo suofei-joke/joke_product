@@ -21,8 +21,8 @@ class YiichinaSpider extends ArticleSpider
         $this->baseUrl = 'http://yiichina.com';
         $this->category = [
             '教程'=>'http://www.yiichina.com/tutorial',
-            '扩展'=>'http://www.yiichina.com/extension',
-            '源码'=>'http://www.yiichina.com/code',
+//            '扩展'=>'http://www.yiichina.com/extension',
+//            '源码'=>'http://www.yiichina.com/code',
         ];
     }
 
@@ -30,6 +30,11 @@ class YiichinaSpider extends ArticleSpider
     {
         foreach ($this->category as $category=>$url){
             $pages = $this->getPages($url, $category);
+            if($pages){
+                foreach ($pages as $p){
+                    $this->urls($category, $p);
+                }
+            }
         }
     }
 
