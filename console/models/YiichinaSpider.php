@@ -77,7 +77,7 @@ class YiichinaSpider extends ArticleSpider
         $crawler->filter('.media-list .media')->each(function ($node) use($category, $url){
             if($node){
                 try{
-                    $a = $node->filter('.media-body .media-heading a');
+                    $a = $node->filter('.media-body h2 a');
                     if($a){
                         $u = $this->baseUrl.trim($a->attr('href'));
                         if(!$this->isGathered($u)){
