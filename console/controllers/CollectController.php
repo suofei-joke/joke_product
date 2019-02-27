@@ -21,6 +21,6 @@ class CollectController extends Controller
             'name' => 'Chris'
         ];
 
-        Resque::enqueue('default', 'My_Job', $args);
+        Resque::enqueue('default', '\console\models\MyJob', $args);
     }
 }

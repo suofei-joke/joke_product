@@ -13,6 +13,7 @@ class MyJob
 {
     public function perform()
     {
+        file_put_contents('/tmp/ljx.log', json_encode($this->args). "\n", FILE_APPEND);
         echo $this->args['name'];
     }
 }
