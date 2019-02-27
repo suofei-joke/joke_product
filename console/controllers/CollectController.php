@@ -21,6 +21,12 @@ class CollectController extends Controller
             'name' => 'Chris'
         ];
 
-        Resque::enqueue('default', '\console\models\MyJob', $args);
+        $token = Resque::enqueue('default', '\console\models\MyJob', $args);
+        echo $token . "\n";
+    }
+
+    public function actionStatus()
+    {
+        $status = new \Resque_Job_Status($token);
     }
 }
