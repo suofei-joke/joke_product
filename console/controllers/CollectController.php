@@ -9,10 +9,23 @@
 namespace console\controllers;
 
 
+use console\models\YiichinaSpider;
 use yii\console\Controller;
+use yii\base\Exception;
 use Resque;
 class CollectController extends Controller
 {
+    public function actionTest()
+    {
+//        $className = '\console\models\YiichinaSpider';
+//        if(!class_exists($className)){
+//            throw new Exception('Yiichina Class does not exist');
+//        }
+        $class = new YiichinaSpider();
+        $res = $class->getContent('http://www.yiichina.com/code/578', '收藏');
+        $res = json_decode($res, true);
+
+    }
     public function actionIndex()
     {
         Resque::setBackend('localhost:6379');
