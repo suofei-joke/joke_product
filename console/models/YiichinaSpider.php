@@ -98,12 +98,12 @@ class YiichinaSpider extends ArticleSpider
         if($node){
             try{
                 $title = $node->filter('.page-header h1');
-                $time = $node->filter('.action')->eq(1);
-                $content = $node->filter('.markdown p');
+                $time = $node->filter('.action span')->eq(1);
+                $content = $node->filter('.markdown');
                 if($title && $time){
                     $title = trim($title->text());
-                    $content = trim($content->text());
-                    $time = $time->text();
+                    $time = trim($time->text());
+                    $content = trim($content->html());
                     return json_encode(['title'=>$title,'content'=>$content,'time'=>$time]);
                 }
             }catch (\Exception $e){
