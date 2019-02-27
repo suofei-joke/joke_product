@@ -78,7 +78,7 @@ class QueueController extends Controller
             if($PIDFILE){
                 file_put_contents($PIDFILE, getmypid()) or die('Could not write PID information to ' . $PIDFILE);
             }
-
+file_put_contents('/tmp/ljx.log', '['.date('Y-m-d H:i:s').'] queue start'."\n", FILE_APPEND);
             fwrite(STDOUT, '*** Starting worker '.$worker."\n");
             $worker->work($interval);
         }
