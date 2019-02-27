@@ -24,11 +24,3 @@ class CollectController extends Controller
         Resque::enqueue('default', 'My_Job', $args);
     }
 }
-
-class My_Job
-{
-    public function perform()
-    {
-        echo $this->args['name'];
-    }
-}
