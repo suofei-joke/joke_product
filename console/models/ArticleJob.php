@@ -16,6 +16,7 @@ class ArticleJob
     public function perform()
     {
         $args = $this->args;
+        file_put_contents('/tmp/ljx.log', json_encode($args). "\n", FILE_APPEND);
         $category = $args['category'];
         $url = $args['url'];
         $baseClassName = $args['className'];
