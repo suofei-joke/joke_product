@@ -27,6 +27,7 @@ class CollectController extends Controller
 
     public function actionStatus()
     {
-        $status = new \Resque_Job_Status($token);
+        $status = new \Resque_Job_Status('5dee8a204bb8f4db76a34a044ee7985f');
+        echo $status->get();
     }
 }
