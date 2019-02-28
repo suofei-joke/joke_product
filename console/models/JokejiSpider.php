@@ -18,7 +18,7 @@ class JokejiSpider extends ArticleSpider
 
     public function __construct()
     {
-        $this->name = 'Jokeji';
+        $this->name = 'jokeji';
         $this->baseUrl = 'http://www.jokeji.cn';
         $this->category = [
             'http://www.jokeji.cn/Keyword.htm',
@@ -114,7 +114,7 @@ class JokejiSpider extends ArticleSpider
                 $content = trim($content);
 
                 if($category && $title && $time && $content){
-                    return json_encode(['category'=>$category,'title'=>$title,'content'=>$content,'time'=>$time, 'source'=>$this->name, 'name'=>isset($name) ? $name : $this->name]);
+                    return json_encode(['category'=>$category,'title'=>$title,'content'=>$content,'time'=>$time, 'source'=>$this->name, 'author'=>isset($name) ? $name : $this->name]);
                 }
             }catch (\Exception $e){
                 $this->addLog($url, 'log', false, $e->getMessage());

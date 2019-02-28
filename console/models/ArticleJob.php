@@ -21,7 +21,7 @@ class ArticleJob
         $url = $args['url'];
         $baseClassName = $args['className'];
         $publishTime = $args['publishTime'];
-        $author = $args['author'];
+
         $className = '\console\models\\'.ucfirst(strtolower($baseClassName)).'Spider';
         if(!class_exists($className)){
             throw new Exception($baseClassName.' Class does not exist');
@@ -35,6 +35,7 @@ class ArticleJob
             $time = $res['time'];
             $time = $publishTime ?: $time;
             $category = $category ?: $res['category'];
+            $author = isset($res['author']) ? $res['author'] : '';
             try{
                 $result = $class->insert($title, $content, $time, $category, $author);
                 $class->addLog($url, $category, $result, $title);

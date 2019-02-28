@@ -24,8 +24,19 @@ class CollectController extends Controller
 //        }
         $class = new JokejiSpider();
         $res = $class->getContent('http://www.jokeji.cn/jokehtml/mj/2019022715390257.htm');
-        echo $res;die;
         $res = json_decode($res, true);
+        if($res){
+            $title = $res['title'];
+            $content = $res['content'];
+            $time = $res['time'];
+            $category = $res['category'];
+            try{
+                $result = $class->insert($title, $content, $time, $category, $author);
+//                $class->addLog($url, $category, $result, $title);
+            }catch (\Exception $e){
+                echo $e->getMessage().PHP_EOL;
+            }
+        }
 
     }
     public function actionIndex()
