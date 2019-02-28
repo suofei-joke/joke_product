@@ -9,6 +9,7 @@
 namespace console\controllers;
 
 
+use console\models\JokejiSpider;
 use console\models\YiichinaSpider;
 use yii\console\Controller;
 use yii\base\Exception;
@@ -21,8 +22,9 @@ class CollectController extends Controller
 //        if(!class_exists($className)){
 //            throw new Exception('Yiichina Class does not exist');
 //        }
-        $class = new YiichinaSpider();
-        $res = $class->getContent('http://www.yiichina.com/code/578', '收藏');
+        $class = new JokejiSpider();
+        $res = $class->getContent('http://www.jokeji.cn/jokehtml/mj/2019022715390257.htm');
+        echo $res;die;
         $res = json_decode($res, true);
 
     }

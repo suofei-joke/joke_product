@@ -54,7 +54,7 @@ class YiichinaSpider extends ArticleSpider
         $crawler->filter('.media-list .pagination li a')->each(function ($node) use($pageUrl, $category){
             if($node){
                 try{
-                    $this->_url[] = $this->baseUrl.trim($node->attr('href'));
+                    $this->_url[] = $this->baseUrl . '/' .ltrim(trim($node->attr('href')), '/');
                 }catch (\Exception $e){
                     $this->addLog($pageUrl, $category, false, $e->getMessage());
                 }

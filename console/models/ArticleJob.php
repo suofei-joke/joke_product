@@ -33,6 +33,7 @@ class ArticleJob
             $content = $res['content'];
             $time = $res['time'];
             $time = $publishTime ?: $time;
+            $category = $category ?: $res['category'];
             try{
                 $result = $class->insert($title, $content, $time, $category);
                 $class->addLog($url, $category, $result, $title);

@@ -9,7 +9,6 @@
 namespace console\controllers;
 
 
-use common\models\Gather;
 use yii\console\Controller;
 use yii\web\NotFoundHttpException;
 
