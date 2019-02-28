@@ -55,12 +55,13 @@ class ArticleSpider
      * @param string $tag
      * @return bool
      */
-    public static function insert($title, $content, $published_at, $tag='', $author='')
+    public static function insert($title, $content, $url, $published_at, $tag='', $author='')
     {
         //插入标签(搜索的分类)
         $article = new Article();
         $article->title = $title;
         $article->content = $content;
+        $article->url = $url;
         $article->author = $author;
         $article->status = Article::STATUS_GATHER;
         $article->published_at = $published_at;
