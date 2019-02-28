@@ -71,8 +71,10 @@ class ArticleSpider
                 if(!$tagModel){
                     $tagModel = new Tag();
                     $tagModel->name = $tag;
-                    $tagModel->article_count = 0;
+                    $tagModel->article_count = 1;
                     $tagModel->save(false);
+                }else{
+                    Tag::updateAllCounters(['article_count'=>1], ['name'=>$tag]);
                 }
                 $articleTag = new ArticleTag();
                 $articleTag->article_id = $article->id;
