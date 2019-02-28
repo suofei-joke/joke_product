@@ -17,6 +17,7 @@ use Yii;
  */
 class Article extends \yii\db\ActiveRecord
 {
+    const STATUS_GATHER = 1;
     /**
      * {@inheritdoc}
      */
