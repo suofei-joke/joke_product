@@ -34,8 +34,8 @@ class JokejiSpider extends ArticleSpider
             if($pages){
                 foreach ($pages as $p){
                     $this->urls($p);
+                    die;
                 }
-                die;
             }
         }
     }
