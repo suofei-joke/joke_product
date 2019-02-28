@@ -114,7 +114,7 @@ class JokejiSpider extends ArticleSpider
                 $content = trim($content);
 
                 if($category && $title && $time && $content){
-                    return json_encode(['category'=>$category,'title'=>$title,'content'=>$content,'time'=>$time]);
+                    return json_encode(['category'=>$category,'title'=>$title,'content'=>$content,'time'=>$time, 'source'=>$this->name, 'name'=>isset($name) ? $name : $this->name]);
                 }
             }catch (\Exception $e){
                 $this->addLog($url, 'log', false, $e->getMessage());
