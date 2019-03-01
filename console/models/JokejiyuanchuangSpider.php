@@ -95,7 +95,10 @@ class JokejiyuanchuangSpider extends ArticleSpider
             try{
                 $category = '原创笑话';
 
-                $title = $node->filter('h1')->eq(0)->text();
+                $title = $node->filter('h1')->text();
+                if(mb_strpos($title,'发布于')){
+                    $title = explode('发布于', $title)[0];
+                }
 
                 $time = $node->filter('span b')->text();
                 $timeArr = explode('发布于', $time);

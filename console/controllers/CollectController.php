@@ -19,24 +19,25 @@ class CollectController extends Controller
 {
     public function actionTest()
     {
-        $model = new JokejiyuanchuangSpider();
-        try{
-            $model->addLog('http://www.jokeji.cn/yuanchuangxiaohua/jokehtml/xiaohuayoumo/2019022620394266.htm',
-                '原创笑话', true, 'aaaaaa');
-        }catch (\Exception $e){
-            echo $e->getMessage() . "\n";
-        }
-        die;
+//        $model = new JokejiyuanchuangSpider();
+//        try{
+//            $model->addLog('http://www.jokeji.cn/yuanchuangxiaohua/jokehtml/xiaohuayoumo/2019022620394266.htm',
+//                '原创笑话', true, 'aaaaaa');
+//        }catch (\Exception $e){
+//            echo $e->getMessage() . "\n";
+//        }
+//        die;
         $class = new JokejiyuanchuangSpider();
-        $res = $class->getContent('http://www.jokeji.cn/yuanchuangxiaohua/jokehtml/xiaohuayoumo/2019022720594671.htm');
+        $res = $class->getContent('http://www.jokeji.cn/yuanchuangxiaohua/jokehtml/xiaohuayoumo/2019011523510937.htm');
         $res = json_decode($res, true);
+        var_dump($res);die;
         if($res){
             $title = $res['title'];
             $content = $res['content'];
             $time = $res['time'];
             $category = $res['category'];
             try{
-                $result = $class->insert($title, $content, $time, $category, $author);
+//                $result = $class->insert($title, $content, $time, $category, $author);
 //                $class->addLog($url, $category, $result, $title);
             }catch (\Exception $e){
                 echo $e->getMessage().PHP_EOL;
