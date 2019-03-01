@@ -10,6 +10,7 @@ namespace console\controllers;
 
 
 use console\models\JokejiSpider;
+use console\models\JokejiyuanchuangSpider;
 use console\models\YiichinaSpider;
 use yii\console\Controller;
 use yii\base\Exception;
@@ -18,8 +19,8 @@ class CollectController extends Controller
 {
     public function actionTest()
     {
-        $class = new JokejiSpider();
-        $res = $class->getContent('http://www.jokeji.cn/jokehtml/mj/2019022715390257.htm');
+        $class = new JokejiyuanchuangSpider();
+        $res = $class->getContent('http://www.jokeji.cn/yuanchuangxiaohua/jokehtml/xiaohuayoumo/2019022720594671.htm');
         $res = json_decode($res, true);
         if($res){
             $title = $res['title'];
