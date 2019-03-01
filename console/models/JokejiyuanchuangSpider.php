@@ -27,7 +27,13 @@ class JokejiyuanchuangSpider extends ArticleSpider
     public function process()
     {
         foreach ($this->category as $url){
-            $this->getPages($url);
+            $pages = $this->getPages($url);
+            if($pages){
+                foreach ($pages as $p){
+                    $this->urls($p);
+                    die;
+                }
+            }
         }
     }
 
@@ -49,30 +55,54 @@ class JokejiyuanchuangSpider extends ArticleSpider
         $next_page = $pages->text();
         $max_page = $next_page + 1;
         for($i=$max_page; $i>=1; $i--){
-            $this->enqueue($this->baseUrl . '/' .str_replace($next_page, $i, $next_url), 'jokejiyuanchuang');
-            die;
-//            $this->_url[] = $this->baseUrl . '/' .str_replace($next_page, $i, $next_url);
+            $this->_url[] = $this->baseUrl . '/' .str_replace($next_page, $i, $next_url);
         }
         return $this->_url;
+    }
+
+    /**
+     * @desc 获取每页文章列表中文章URL和发布时间
+     * @author lijiaxu
+     * @date 2019/2/26
+     * @param $category
+     * @param $url
+     */
+    private function urls($url)
+    {
+        $client = new Client();
+        $crawler = $client->request('GET', $url);
+        $crawler->filter('.ycjoke .txt h2 a')->each(function ($node) use($url){
+            if($node){
+                try{
+                    $a = $node;
+                    if($a){
+                        $u = $this->baseUrl . '/' . ltrim(trim($a->attr('href')), '/');
+                        if(!$this->isGathered($u)){
+                            $this->enqueue($u, 'jokejiyuanchuang');
+                        }
+                    }
+                }catch (\Exception $e){
+                    $this->addLog($url, 'log', false, $e->getMessage());
+                }
+            }
+        });
     }
 
     public function getContent($url){
         $client = new Client;
         $crawler = $client->request('GET', $url);
-        $node = $crawler->filter('.left_up')->eq(0);
+        $node = $crawler->filter('.txt')->eq(0);
         if($node){
             try{
-                $category = $node->filter('h1')->eq(0)->filter('a')->eq(1)->text();
-                $category = trim($category);
+                $category = '原创笑话';
 
                 $title = $node->filter('h1')->eq(0)->text();
-                $titleArr = explode('->', $title);
-                $title = trim(end($titleArr));
 
-                $time = $node->filter('.pl_ad ul li')->eq(2)->text();
-                $time = strtotime(str_replace('发布时间：', '', $time));
+                $time = $node->filter('.span b')->text();
+                $timeArr = explode('发布于', $time);
+                $time = strtotime(trim($timeArr[1]));
 
-                $content = $node->filter('#text110')->html();
+                $content = $node->filter('ul li')->html();
                 $content = trim($content);
 
                 if($category && $title && $time && $content){
