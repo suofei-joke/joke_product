@@ -18,10 +18,6 @@ class CollectController extends Controller
 {
     public function actionTest()
     {
-//        $className = '\console\models\YiichinaSpider';
-//        if(!class_exists($className)){
-//            throw new Exception('Yiichina Class does not exist');
-//        }
         $class = new JokejiSpider();
         $res = $class->getContent('http://www.jokeji.cn/jokehtml/mj/2019022715390257.htm');
         $res = json_decode($res, true);

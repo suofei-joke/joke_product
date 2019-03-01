@@ -11,30 +11,23 @@ namespace console\models;
 
 use Goutte\Client;
 
-class JokejiSpider extends ArticleSpider
+class JokejiYuanChuangSpider extends ArticleSpider
 {
     private $_url;
-    private static $page_param = 'me_page';
 
     public function __construct()
     {
         $this->name = 'jokeji';
         $this->baseUrl = 'http://www.jokeji.cn';
         $this->category = [
-            'http://www.jokeji.cn/Keyword.htm',
+            'http://www.jokeji.cn/yuanchuangxiaohua/list/default.htm',
         ];
     }
 
     public function process()
     {
         foreach ($this->category as $url){
-            $pages = $this->getPages($url);
-            if($pages){
-                foreach ($pages as $p){
-                    $this->urls($p);
-                    die;
-                }
-            }
+            $this->getPages($url);
         }
     }
 
@@ -51,45 +44,16 @@ class JokejiSpider extends ArticleSpider
         $client = new Client();
         $crawler = $client->request('GET', $pageUrl);//拿到网页代码
         //拿到分页信息
-        $pages = $crawler->filter('.main_title table tr td a');
-        //获取最大页数
-        $max_key = count($pages) - 1;
-        $max_url = ltrim($pages->eq($max_key)->attr('href'), '/');//最大链接后缀
-        $total_page = parse_url($max_url)['query'];//分解链接拿到参数信息
-        parse_str($total_page, $me_page);
-        $max_page = $me_page[self::$page_param];
+        $pages = $crawler->filter('.pages a');
+        $next_url = ltrim($pages->attr('href'), '/');
+        $next_page = $pages->text();
+        $max_page = $next_page + 1;
         for($i=1; $i<=$max_page; $i++){
-            $this->_url[] = $this->baseUrl . '/' .str_replace($max_page, $i, $max_url);
+            $this->enqueue($this->baseUrl . '/' .str_replace($next_page, $i, $next_url), 'jokejiYuanChuang');
+            die;
+//            $this->_url[] = $this->baseUrl . '/' .str_replace($next_page, $i, $next_url);
         }
         return $this->_url;
-    }
-
-    /**
-     * @desc 获取每页文章列表中文章URL和发布时间
-     * @author lijiaxu
-     * @date 2019/2/26
-     * @param $category
-     * @param $url
-     */
-    private function urls($url)
-    {
-        $client = new Client();
-        $crawler = $client->request('GET', $url);
-        $crawler->filter('.main_14')->each(function ($node) use($url){
-            if($node){
-                try{
-                    $a = $node;
-                    if($a){
-                        $u = $this->baseUrl . '/' . ltrim(trim($a->attr('href')), '/');
-                        if(!$this->isGathered($u)){
-                            $this->enqueue($u, 'jokeji');
-                        }
-                    }
-                }catch (\Exception $e){
-                    $this->addLog($url, 'log', false, $e->getMessage());
-                }
-            }
-        });
     }
 
     public function getContent($url){

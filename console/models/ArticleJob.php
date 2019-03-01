@@ -34,17 +34,34 @@ class ArticleJob
         $res = $class->getContent($url, $category);
         $res = json_decode($res, true);
         if($res){
-            $title = $res['title'];
-            $content = $res['content'];
-            $time = $res['time'];
-            $time = $publishTime ?: $time;
-            $category = $category ?: $res['category'];
-            $author = isset($res['author']) ? $res['author'] : '';
-            try{
-                $result = $class->insert($title, $content, $url, $time, $category, $author);
-                $class->addLog($url, $category, $result, $title);
-            }catch (\Exception $e){
-                echo $e->getMessage().PHP_EOL;
+            if(count($res) == count($res, 1)){
+                $title = $res['title'];
+                $content = $res['content'];
+                $time = $res['time'];
+                $time = $publishTime ?: $time;
+                $category = $category ?: $res['category'];
+                $author = isset($res['author']) ? $res['author'] : '';
+                try{
+                    $result = $class->insert($title, $content, $url, $time, $category, $author);
+                    $class->addLog($url, $category, $result, $title);
+                }catch (\Exception $e){
+                    echo $e->getMessage().PHP_EOL;
+                }
+            }else{
+                foreach ($res as $value){
+                    $title = $value['title'];
+                    $content = $value['content'];
+                    $time = $value['time'];
+                    $time = $publishTime ?: $time;
+                    $category = $category ?: $value['category'];
+                    $author = isset($value['author']) ? $value['author'] : '';
+                    try{
+                        $result = $class->insert($title, $content, $url, $time, $category, $author);
+                        $class->addLog($url, $category, $result, $title);
+                    }catch (\Exception $e){
+                        echo $e->getMessage().PHP_EOL;
+                    }
+                }
             }
         }
     }
