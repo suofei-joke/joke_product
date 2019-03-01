@@ -48,7 +48,7 @@ class JokejiyuanchuangSpider extends ArticleSpider
         $next_url = ltrim($pages->attr('href'), '/');
         $next_page = $pages->text();
         $max_page = $next_page + 1;
-        for($i=1; $i<=$max_page; $i++){
+        for($i=$max_page; $i>=1; $i--){
             $this->enqueue($this->baseUrl . '/' .str_replace($next_page, $i, $next_url), 'jokejiyuanchuang');
             die;
 //            $this->_url[] = $this->baseUrl . '/' .str_replace($next_page, $i, $next_url);
