@@ -91,7 +91,6 @@ class JokejiyuanchuangSpider extends ArticleSpider
     public function getContent($url){
         $client = new Client;
         $crawler = $client->request('GET', $url);
-        var_dump($crawler);die;
         $node = $crawler->filter('.txt')->eq(0);
         if($node){
             try{
@@ -99,16 +98,13 @@ class JokejiyuanchuangSpider extends ArticleSpider
 
                 $title = $node->filter('h1')->eq(0)->text();
 
-                $time = $node->filter('.span b')->text();
+                $time = $node->filter('span b')->text();
                 $timeArr = explode('发布于', $time);
+                $name = trim($timeArr[0]);
                 $time = strtotime(trim($timeArr[1]));
 
                 $content = $node->filter('ul li')->html();
                 $content = trim($content);
-                file_put_contents('/tmp/ljx.log', json_encode($category). "\n", FILE_APPEND);
-                file_put_contents('/tmp/ljx.log', json_encode($title). "\n", FILE_APPEND);
-                file_put_contents('/tmp/ljx.log', json_encode($time). "\n", FILE_APPEND);
-                file_put_contents('/tmp/ljx.log', json_encode($content). "\n", FILE_APPEND);
                 if($category && $title && $time && $content){
                     return json_encode(['category'=>$category,'title'=>$title,'content'=>$content,'time'=>$time, 'source'=>$this->name, 'author'=>isset($name) ? $name : $this->name]);
                 }
