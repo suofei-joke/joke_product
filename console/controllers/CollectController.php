@@ -19,6 +19,14 @@ class CollectController extends Controller
 {
     public function actionTest()
     {
+        $model = new JokejiyuanchuangSpider();
+        try{
+            $model->addLog('http://www.jokeji.cn/yuanchuangxiaohua/jokehtml/xiaohuayoumo/2019022620394266.htm',
+                '原创笑话', true, 'aaaaaa');
+        }catch (\Exception $e){
+            echo $e->getMessage() . "\n";
+        }
+        die;
         $class = new JokejiyuanchuangSpider();
         $res = $class->getContent('http://www.jokeji.cn/yuanchuangxiaohua/jokehtml/xiaohuayoumo/2019022720594671.htm');
         $res = json_decode($res, true);

@@ -43,7 +43,6 @@ class ArticleJob
                 $author = isset($res['author']) ? $res['author'] : '';
                 try{
                     $result = $class->insert($title, $content, $url, $time, $category, $author);
-                    $class->addLog($url, $category, $result, $title);
                 }catch (\Exception $e){
                     echo $e->getMessage().PHP_EOL;
                 }
@@ -57,7 +56,6 @@ class ArticleJob
                     $author = isset($value['author']) ? $value['author'] : '';
                     try{
                         $result = $class->insert($title, $content, $url, $time, $category, $author);
-                        $class->addLog($url, $category, $result, $title);
                     }catch (\Exception $e){
                         echo $e->getMessage().PHP_EOL;
                     }

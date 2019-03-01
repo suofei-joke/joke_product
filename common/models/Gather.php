@@ -32,7 +32,7 @@ class Gather extends \yii\db\ActiveRecord
     {
         return [
             [['category', 'url', 'url_org', 'result'], 'required'],
-            [['res'], 'integer'],
+            [['res'], 'safe'],
             [['name', 'category', 'url', 'url_org', 'result'], 'string', 'max' => 255],
         ];
     }
