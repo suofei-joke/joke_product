@@ -11,7 +11,7 @@ namespace console\models;
 
 use Goutte\Client;
 
-class JokejiYuanChuangSpider extends ArticleSpider
+class JokejiyuanchuangSpider extends ArticleSpider
 {
     private $_url;
 
@@ -49,7 +49,7 @@ class JokejiYuanChuangSpider extends ArticleSpider
         $next_page = $pages->text();
         $max_page = $next_page + 1;
         for($i=1; $i<=$max_page; $i++){
-            $this->enqueue($this->baseUrl . '/' .str_replace($next_page, $i, $next_url), 'jokejiYuanChuang');
+            $this->enqueue($this->baseUrl . '/' .str_replace($next_page, $i, $next_url), 'jokejiyuanchuang');
             die;
 //            $this->_url[] = $this->baseUrl . '/' .str_replace($next_page, $i, $next_url);
         }
