@@ -14,7 +14,7 @@ return [
             'dsn' => 'mysql:host=121.42.242.167;dbname=joke',
             'username' => 'root',
             'password' => '123456ljx',
-            'charset' => 'utf8',
+            'charset' => 'utf8mb4',
         ],
     ],
 ];

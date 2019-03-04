@@ -86,7 +86,7 @@ class ArticleSpider
         }catch (\Exception $e){
             $res = false;
             $transaction->rollBack();
-            echo $e->getMessage().PHP_EOL;
+            file_put_contents('/tmp/ljx.log', $e->getMessage() . "\n", FILE_APPEND);
         }
         return $res ? true : false;
     }
