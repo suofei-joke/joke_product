@@ -27,7 +27,7 @@ class ArticleSpider
      */
     protected function isGathered($url)
     {
-        $gather = Gather::find()->where(['url'=>md5(trim($url)), 'res'=>true])->one();
+        $gather = Article::find()->where(['url'=>trim($url)])->one();
         return $gather ? true : false;
     }
 

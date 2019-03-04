@@ -13,6 +13,7 @@ use common\models\Tag;
 use console\models\JokejiSpider;
 use console\models\JokejiyuanchuangSpider;
 use console\models\YiichinaSpider;
+use Goutte\Client;
 use yii\console\Controller;
 use yii\base\Exception;
 use Resque;
@@ -20,6 +21,11 @@ class CollectController extends Controller
 {
     public function actionTest($type = 0)
     {
+        $client = new Client();
+        $crawler = $client->request('GET', 'http://www.jokeji.cn/yuanchuangxiaohua/jokehtml/xiaohuayoumo/2017103021492534.htm');
+        $node = $crawler->filter('.bottom');
+        var_dump($node->html());die;
+
         $transaction = \Yii::$app->db->beginTransaction();
         try{
             if($type){
