@@ -94,7 +94,7 @@ class JokejiyuanchuangSpider extends ArticleSpider
         $node = $crawler->filter('.txt')->eq(0);
         if($node){
             try{
-                $category = '原创笑话';
+                $category = '笑话集原创';
 
                 $title = $node->filter('h1')->text();
                 if(mb_strpos($title,'发布于')){
