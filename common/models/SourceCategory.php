@@ -11,6 +11,7 @@ use Yii;
  * @property string $source_id
  * @property string $category_id
  * @property string $category_url 收集网页地址
+ * @property string $model spider名称
  * @property string $name 收集描述
  * @property string $max_ctime 收集最大发布时间
  * @property string $created_at
@@ -31,9 +32,9 @@ class SourceCategory extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['source_id', 'category_id', 'max_ctime', 'created_at'], 'required'],
+            [['source_id', 'category_id', 'model', 'max_ctime', 'created_at'], 'required'],
             [['source_id', 'category_id', 'max_ctime', 'created_at'], 'integer'],
-            [['category_url', 'name'], 'string', 'max' => 255],
+            [['category_url', 'model', 'name'], 'string', 'max' => 255],
         ];
     }
 
@@ -47,6 +48,7 @@ class SourceCategory extends \yii\db\ActiveRecord
             'source_id' => 'Source ID',
             'category_id' => 'Category ID',
             'category_url' => 'Category Url',
+            'model' => 'Model',
             'name' => 'Name',
             'max_ctime' => 'Max Ctime',
             'created_at' => 'Created At',

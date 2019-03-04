@@ -47,7 +47,7 @@ class Source extends \yii\db\ActiveRecord
         ];
     }
 
-    public function getCategorys()
+    public function getCategory()
     {
         return $this->hasMany(SourceCategory::className(), ['source_id'=>'id']);
     }
