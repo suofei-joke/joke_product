@@ -31,6 +31,7 @@ class JokejiyuanchuangSpider extends ArticleSpider
             if($pages){
                 foreach ($pages as $p){
                     $this->urls($p);
+                    die;
                 }
             }
         }

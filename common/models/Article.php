@@ -12,6 +12,7 @@ use Yii;
  * @property string $content 文章详情
  * @property string $url 文章链接
  * @property string $author 作者
+ * @property string $tag_id
  * @property int $status 文章状态
  * @property string $published_at
  */
@@ -34,7 +35,7 @@ class Article extends \yii\db\ActiveRecord
         return [
             [['content', 'status', 'published_at'], 'required'],
             [['content'], 'string'],
-            [['status', 'published_at'], 'integer'],
+            [['tag_id', 'status', 'published_at'], 'integer'],
             [['title', 'url', 'author'], 'string', 'max' => 255],
         ];
     }
@@ -49,6 +50,7 @@ class Article extends \yii\db\ActiveRecord
             'title' => 'Title',
             'content' => 'Content',
             'url' => 'Url',
+            'tag_id' => 'Tag ID',
             'author' => 'Author',
             'status' => 'Status',
             'published_at' => 'Published At',

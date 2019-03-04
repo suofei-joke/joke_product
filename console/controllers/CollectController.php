@@ -9,6 +9,7 @@
 namespace console\controllers;
 
 
+use common\models\Tag;
 use console\models\JokejiSpider;
 use console\models\JokejiyuanchuangSpider;
 use console\models\YiichinaSpider;
@@ -17,8 +18,26 @@ use yii\base\Exception;
 use Resque;
 class CollectController extends Controller
 {
-    public function actionTest()
+    public function actionTest($type = 0)
     {
+        $transaction = \Yii::$app->db->beginTransaction();
+        try{
+            if($type){
+                $tagModel = new Tag();
+                $tagModel->name = 'test';
+                $tagModel->article_count = 1;
+                $tagModel->save(false);
+                $tag_id = $tagModel->id;
+            }else{
+                throw new \Exception('rollback');
+            }
+            $transaction->commit();
+            echo $tag_id . "\n";
+        }catch (\Exception $e){
+            $transaction->rollBack();
+            echo $e->getMessage() . "\n";
+        }
+        die;
 //        $model = new JokejiyuanchuangSpider();
 //        try{
 //            $model->addLog('http://www.jokeji.cn/yuanchuangxiaohua/jokehtml/xiaohuayoumo/2019022620394266.htm',
