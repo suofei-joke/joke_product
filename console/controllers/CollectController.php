@@ -10,7 +10,6 @@ namespace console\controllers;
 
 
 use common\models\Source;
-use common\models\SourceCategory;
 use yii\console\Controller;
 use yii\db\ActiveQuery;
 use yii\web\NotFoundHttpException;
@@ -31,7 +30,10 @@ class CollectController extends Controller
                 $pid = pcntl_fork();
                 if($pid == -1){
                     die("Could not fork worker" . $source_category['model'] . "\n");
-                }elseif(!$pid){
+                }elseif($pid){
+                    pcntl_wait($status);
+                    var_dump($status);
+                }else{
                     $className = '\console\models\\'.ucfirst(strtolower($source_category['model'])) . 'Spider';
                     if(!class_exists($className)){
                         throw new NotFoundHttpException($className.' Class not found');
