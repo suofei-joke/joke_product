@@ -21,6 +21,7 @@ class CollectController extends Controller
     public function actionArticle()
     {
         $pid = pcntl_fork();
+        echo $pid . "\n";
         var_dump($pid);die;
         $taskStartTime = microtime(true);
         $sources = Source::find()
