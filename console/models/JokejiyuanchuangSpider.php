@@ -26,7 +26,6 @@ class JokejiyuanchuangSpider extends ArticleSpider
 
     public function process()
     {
-        file_put_contents('/tmp/ljx.log', 'jokeyc'."\n", FILE_APPEND);
         foreach ($this->category as $url){
             $pages = $this->getPages($url);
             if($pages){

@@ -51,9 +51,9 @@ class CollectController extends Controller
         }
         while (count($childs) > 0){
             foreach ($childs as $key => $child){
-                $res = pcntl_waitpid($pid, $status, WNOHANG);
+                $res = pcntl_waitpid($child, $status, WNOHANG);
                 if($res == -1 || $res > 0){
-                    $this->stdout("$key=>$pid\n");
+                    $this->stdout("$key=>$child\n");
                     unset($childs[$key]);
                 }
             }
