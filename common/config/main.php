@@ -16,5 +16,8 @@ return [
             'password' => '123456ljx',
             'charset' => 'utf8mb4',
         ],
+        'Aliyunoss' => [
+            'class' => 'app\components\Aliyunoss',
+        ],
     ],
 ];
