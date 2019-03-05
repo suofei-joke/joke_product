@@ -12,12 +12,15 @@ namespace console\controllers;
 use common\models\Source;
 use yii\console\Controller;
 use yii\db\ActiveQuery;
+use yii\helpers\Console;
+use yii\helpers\FileHelper;
 use yii\web\NotFoundHttpException;
 
 class CollectController extends Controller
 {
     public function actionArticle()
     {
+        $taskStartTime = microtime(true);
         $sources = Source::find()
             ->joinWith([
                 'category' => function(ActiveQuery $query){
@@ -25,14 +28,16 @@ class CollectController extends Controller
                 }
             ])
             ->asArray()->all();
+        $childs = [];
         foreach ($sources as $source){
             foreach ($source['category'] as $source_category){
                 $pid = pcntl_fork();
                 if($pid == -1){
-                    die("Could not fork worker" . $source_category['model'] . "\n");
+                    $this->stdout("Could not fork worker" . $source_category['model'] . "\n", Console::BG_RED);
+                    return 1;
                 }elseif($pid){
-                    pcntl_wait($status);
-                    var_dump($status);
+                    $this->stdout("I'm the Parent {$source_category['model']}\n", Console::BG_GREEN);
+                    $childs[] = $pid;
                 }else{
                     $className = '\console\models\\'.ucfirst(strtolower($source_category['model'])) . 'Spider';
                     if(!class_exists($className)){
@@ -44,5 +49,26 @@ class CollectController extends Controller
                 }
             }
         }
+        while (count($childs) > 0){
+            foreach ($childs as $key => $child){
+                $res = pcntl_waitpid($pid, $status, WNOHANG);
+                if($res == -1 || $res > 0){
+                    $this->stdout("$key=>$pid", Console::BG_YELLOW);
+                    unset($childs[$key]);
+                }
+            }
+            sleep(1);
+        }
+        $lastTime = $this->getElapsedTime($taskStartTime);
+        \Yii::info("totalLastTime|" . $lastTime, __METHOD__);
+        $this->stdout("success|$lastTime", Console::BG_GREEN);
+        return 0;
+    }
+
+    public function getElapsedTime($startTime)
+    {
+        $endTime = microtime(true);
+        $elapsedTime = number_format($endTime - $startTime, 4);
+        return $elapsedTime;
     }
 }
