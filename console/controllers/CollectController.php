@@ -43,7 +43,6 @@ class CollectController extends Controller
                     if(!class_exists($className)){
                         throw new NotFoundHttpException($className.' Class not found');
                     }
-
                     $spider = new $className;
                     $spider->process();
                 }
