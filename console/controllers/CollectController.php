@@ -20,6 +20,8 @@ class CollectController extends Controller
 {
     public function actionArticle()
     {
+        $pid = pcntl_fork();
+        var_dump($pid);die;
         $taskStartTime = microtime(true);
         $sources = Source::find()
             ->joinWith([
