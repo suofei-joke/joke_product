@@ -20,9 +20,6 @@ class CollectController extends Controller
 {
     public function actionArticle()
     {
-        $pid = pcntl_fork();
-        echo $pid . "\n";
-        var_dump($pid);die;
         $taskStartTime = microtime(true);
         $sources = Source::find()
             ->joinWith([
@@ -39,7 +36,7 @@ class CollectController extends Controller
                     $this->stdout("Could not fork worker" . $source_category['model'] . "\n");
                     return 1;
                 }elseif($pid){
-                    $this->stdout("I'm the Parent {$source_category['model']}\n");
+                    $this->stdout("I'm the Parent {$source_category['model']}, PID {$pid}\n");
                     $childs[] = $pid;
                 }else{
                     $className = '\console\models\\'.ucfirst(strtolower($source_category['model'])) . 'Spider';
