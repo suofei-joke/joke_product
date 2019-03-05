@@ -43,6 +43,7 @@ class CollectController extends Controller
                     if(!class_exists($className)){
                         throw new NotFoundHttpException($className.' Class not found');
                     }
+                    \Yii::$app->db->close();
                     $spider = new $className;
                     $spider->process();
                 }
