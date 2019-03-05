@@ -53,7 +53,7 @@ class CollectController extends Controller
             foreach ($childs as $key => $child){
                 $res = pcntl_waitpid($pid, $status, WNOHANG);
                 if($res == -1 || $res > 0){
-                    $this->stdout("$key=>$pid", Console::BG_YELLOW);
+                    $this->stdout("$key=>$pid\n", Console::BG_YELLOW);
                     unset($childs[$key]);
                 }
             }
@@ -61,7 +61,7 @@ class CollectController extends Controller
         }
         $lastTime = $this->getElapsedTime($taskStartTime);
         \Yii::info("totalLastTime|" . $lastTime, __METHOD__);
-        $this->stdout("success|$lastTime", Console::BG_GREEN);
+        $this->stdout("success|$lastTime\n", Console::BG_GREEN);
         return 0;
     }
 
