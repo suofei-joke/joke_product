@@ -12,7 +12,6 @@ namespace console\models;
 use common\models\Article;
 use common\models\ArticleTag;
 use common\models\Gather;
-use common\models\Tag;
 
 class ArticleSpider
 {
@@ -59,14 +58,14 @@ class ArticleSpider
     {
         $transaction = \Yii::$app->db->beginTransaction();
         try{
-            $tagModel = Tag::find()->where(['name'=>$tag])->one();
+            $tagModel = ArticleTag::find()->where(['name'=>$tag])->one();
             if(!$tagModel){
-                $tagModel = new Tag();
+                $tagModel = new ArticleTag();
                 $tagModel->name = $tag;
                 $tagModel->article_count = 1;
                 $tagModel->save(false);
             }else{
-                Tag::updateAllCounters(['article_count'=>1], ['name'=>$tag]);
+                ArticleTag::updateAllCounters(['article_count'=>1], ['name'=>$tag]);
             }
             $article = new Article();
             $article->title = $title;
@@ -78,11 +77,6 @@ class ArticleSpider
             $article->published_at = $published_at;
             $res = $article->save(false);
 
-            $articleTag = new ArticleTag();
-            $articleTag->article_id = $article->id;
-            $articleTag->tag_id = $tagModel->id;
-            $articleTag->save(false);
-            $transaction->commit();
         }catch (\Exception $e){
             $res = false;
             $transaction->rollBack();
