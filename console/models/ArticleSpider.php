@@ -76,7 +76,7 @@ class ArticleSpider
             $article->status = Article::STATUS_GATHER;
             $article->published_at = $published_at;
             $res = $article->save(false);
-
+            $transaction->commit();
         }catch (\Exception $e){
             $res = false;
             $transaction->rollBack();
