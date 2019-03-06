@@ -12,7 +12,7 @@ namespace console\models;
 use common\models\Article;
 use yii\base\Exception;
 
-class ArticleJob
+class ImageJob
 {
     public function perform()
     {

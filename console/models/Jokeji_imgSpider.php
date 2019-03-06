@@ -11,7 +11,7 @@ namespace console\models;
 
 use Goutte\Client;
 
-class Jokeji_gaoxiaoSpider extends ImageSpider
+class Jokeji_imgSpider extends ImageSpider
 {
     private $_url;
 
@@ -74,10 +74,9 @@ class Jokeji_gaoxiaoSpider extends ImageSpider
                     $a = $node->filter('a')->eq(0);
                     if($a){
                         $u = $this->baseUrl . '/' . ltrim(trim($a->attr('href')), '/');
-                        echo $u . "\n";
-//                        if(!$this->isGathered($u)){
-//                            $this->enqueue($u, 'jokeji');
-//                        }
+                        if(!$this->isGathered($u)){
+                            $this->enqueue($u, 'jokeji_gaoxiao');
+                        }
                     }
                 }catch (\Exception $e){
                     $this->addLog($url, 'log', false, $e->getMessage());

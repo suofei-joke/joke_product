@@ -41,7 +41,7 @@ class ImageSpider
      */
     public function enqueue($url, $className, $category = '', $publishTime = '')
     {
-        \Resque::enqueue('article_spider', 'console\models\ArticleJob', ['category'=>$category, 'url'=>$url, 'className'=>$className, 'publishTime'=>$publishTime]);
+        \Resque::enqueue('img_spider', 'console\models\ImageJob', ['category'=>$category, 'url'=>$url, 'className'=>$className, 'publishTime'=>$publishTime]);
     }
 
     /**
