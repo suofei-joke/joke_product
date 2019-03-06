@@ -15,6 +15,6 @@ class TestController extends Controller
 {
     public function actionTest()
     {
-        
+        \Yii::$app->aliyunoss->test();
     }
 }

@@ -8,8 +8,8 @@ use Yii;
  * This is the model class for table "article_tag".
  *
  * @property string $id
- * @property string $article_id
- * @property string $tag_id
+ * @property string $name 标签名
+ * @property string $article_count
  */
 class ArticleTag extends \yii\db\ActiveRecord
 {
@@ -27,8 +27,9 @@ class ArticleTag extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['article_id', 'tag_id'], 'required'],
-            [['article_id', 'tag_id'], 'integer'],
+            [['name'], 'required'],
+            [['article_count'], 'integer'],
+            [['name'], 'string', 'max' => 255],
         ];
     }
 
@@ -39,8 +40,8 @@ class ArticleTag extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'article_id' => 'Article ID',
-            'tag_id' => 'Tag ID',
+            'name' => 'Name',
+            'article_count' => 'Article Count',
         ];
     }
 }

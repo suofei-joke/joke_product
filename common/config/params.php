@@ -4,9 +4,11 @@ return [
     'supportEmail' => 'support@example.com',
     'user.passwordResetTokenExpire' => 3600,
     'oss' => [
-        'accessKeyId'=>'您的accessKeyId',
-        'accessKeySecret'=>'您的accessKeySecret',
-        'bucket' => '您的bucket',
-        'endPoint' => '您的endPoint',
+        'accessKeyId'=>'LTAIFNyzUbOuITtB',
+        'accessKeySecret'=>'l4VUragRbpjKLWVQCsrNO2Wl4GOpJV',
+        'image' => [
+            'bucket' => 'sophienice-img',
+            'endPoint' => 'oss-cn-beijing.aliyuncs.com',
+        ],
     ],
 ];
