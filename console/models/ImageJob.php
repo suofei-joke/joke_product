@@ -34,33 +34,19 @@ class ImageJob
         $res = $class->getContent($url);
         $res = json_decode($res, true);
         if($res){
-            if(count($res) == count($res, 1)){
-                $title = $res['title'];
-                $content = $res['content'];
-                $time = $res['time'];
-                $time = $publishTime ?: $time;
-                $category = $category ?: $res['category'];
-                $author = isset($res['author']) ? $res['author'] : '';
-                try{
-                    $result = $class->insert($title, $content, $url, $time, $category, $author);
-                }catch (\Exception $e){
-                    echo $e->getMessage().PHP_EOL;
-                }
-            }else{
-                foreach ($res as $value){
-                    $title = $value['title'];
-                    $content = $value['content'];
-                    $time = $value['time'];
-                    $time = $publishTime ?: $time;
-                    $category = $category ?: $value['category'];
-                    $author = isset($value['author']) ? $value['author'] : '';
-                    try{
-                        $result = $class->insert($title, $content, $url, $time, $category, $author);
-                    }catch (\Exception $e){
-                        echo $e->getMessage().PHP_EOL;
-                    }
-                }
+            $title = $res['title'];
+            $content = $res['content'];
+            $oss = $res['oss'];
+            $time = $res['time'];
+            $time = $publishTime ?: $time;
+            $category = $category ?: $res['category'];
+            $author = isset($res['author']) ? $res['author'] : '';
+            try{
+                $result = $class->insert($title, $content, $oss, $url, $time, $category, $author);
+            }catch (\Exception $e){
+                echo $e->getMessage().PHP_EOL;
             }
+
         }
     }
 }

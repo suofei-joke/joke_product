@@ -12,6 +12,7 @@ use Yii;
  * @property string $content 文章详情
  * @property string $url 文章链接
  * @property string $author 作者
+ * @property int $type 类型 0-纯文本 1-有图片 2-有视频
  * @property string $tag_id
  * @property int $status 文章状态
  * @property string $published_at
@@ -19,6 +20,12 @@ use Yii;
 class Article extends \yii\db\ActiveRecord
 {
     const STATUS_GATHER = 1;
+
+    public static $ARTICLE_TYPE = [
+        'article' => 0,
+        'image' => 1,
+        'video' => 2,
+    ];
     /**
      * {@inheritdoc}
      */
@@ -35,7 +42,7 @@ class Article extends \yii\db\ActiveRecord
         return [
             [['content', 'status', 'published_at'], 'required'],
             [['content'], 'string'],
-            [['tag_id', 'status', 'published_at'], 'integer'],
+            [['tag_id', 'type', 'status', 'published_at'], 'integer'],
             [['title', 'url', 'author'], 'string', 'max' => 255],
         ];
     }
@@ -52,6 +59,7 @@ class Article extends \yii\db\ActiveRecord
             'url' => 'Url',
             'tag_id' => 'Tag ID',
             'author' => 'Author',
+            'type' => 'Type',
             'status' => 'Status',
             'published_at' => 'Published At',
         ];

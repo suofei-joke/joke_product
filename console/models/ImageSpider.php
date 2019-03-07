@@ -10,6 +10,7 @@ namespace console\models;
 
 
 use common\models\Article;
+use common\models\ArticleEntity;
 use common\models\ArticleTag;
 use common\models\Gather;
 
@@ -54,8 +55,45 @@ class ImageSpider
      * @param string $tag
      * @return bool
      */
-    public static function insert($title, $content, $url, $published_at, $tag='未知', $author='')
+    public static function insert($title, $content, $oss, $url, $published_at, $tag='未知', $author='')
     {
+        $transaction = \Yii::$app->db->beginTransaction();
+        try{
+            $tagModel = ArticleTag::find()->where(['name'=>$tag])->one();
+            if(!$tagModel){
+                $tagModel = new ArticleTag();
+                $tagModel->name = $tag;
+                $tagModel->article_count = 1;
+                $tagModel->save(false);
+            }else{
+                ArticleTag::updateAllCounters(['article_count'=>1], ['name'=>$tag]);
+            }
+            foreach ($oss as $ossVal){
+                if(!ArticleEntity::find()->where(['md5'=>$ossVal['md5']])->exists()){
+                    $entityModel = new ArticleEntity();
+                    $entityModel->md5 = $ossVal['md5'];
+                    $entityModel->mime = $ossVal['mime'];
+                    $entityModel->entity = $ossVal['entity'];
+                    $entityModel->save(false);
+                }
+            }
+            $article = new Article();
+            $article->title = $title;
+            $article->content = $content;
+            $article->url = $url;
+            $article->author = $author;
+            $article->tag_id = $tagModel->id;
+            $article->type = Article::$ARTICLE_TYPE['image'];
+            $article->status = Article::STATUS_GATHER;
+            $article->published_at = $published_at;
+            $res = $article->save(false);
+            $transaction->commit();
+        }catch (\Exception $e){
+            $res = false;
+            $transaction->rollBack();
+            file_put_contents('/tmp/ljx.log', $e->getMessage() . "\n", FILE_APPEND);
+        }
+        return $res ? true : false;
     }
 
     public function addLog($url, $category, $res, $result)

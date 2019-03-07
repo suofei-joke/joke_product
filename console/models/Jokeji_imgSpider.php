@@ -12,13 +12,13 @@ namespace console\models;
 use common\components\Aliyunoss;
 use Goutte\Client;
 use yii\helpers\FileHelper;
-use yii\helpers\Inflector;
-use yii\helpers\Json;
-use yii\helpers\Markdown;
 
 class Jokeji_imgSpider extends ImageSpider
 {
     private $_url;
+    private $content;
+    private $ossInfo = [];
+    private $ossDir = 'joke/gaoxiao/';
 
     public function __construct()
     {
@@ -107,35 +107,47 @@ class Jokeji_imgSpider extends ImageSpider
                 $time = strtotime(str_replace('发布时间：', '', $time));
 
                 $contentNode = $node->filter('.pic_pview ul');
-                $content = $contentNode->html();
+                $this->content = $contentNode->html();
 //echo $content."\n";die;
                 $img = $node->filter('li img');
-                $img->each(function ($img_node) use($content){
-                    $url = $this->baseUrl . '/'.ltrim($img_node->attr('src'), '/');
-                    static::uploadOss($url);
+                $img->each(function ($img_node){
+                    $src = $img_node->attr('src');
+                    $url = $this->baseUrl . '/'.ltrim($src, '/');
+                    $ossInfo = $this->uploadOss($url);
+                    if($ossInfo){
+                        $this->content = str_replace($src, '{{'.$ossInfo['md5'].'}}', $this->content);
+                        $this->ossInfo[] = $ossInfo;
+                    }
                 });
-                die;
 
-                if($category && $title && $time && $content){
-                    return json_encode(['category'=>$category,'title'=>$title,'content'=>$content,'time'=>$time, 'source'=>$this->name, 'author'=>isset($name) ? $name : $this->name]);
+                if($category && $title && $time && $this->content){
+                    return json_encode(['category'=>$category,'title'=>$title,'content'=>$this->content,'oss'=>$this->ossInfo,'time'=>$time, 'source'=>$this->name, 'author'=>isset($name) ? $name : $this->name]);
                 }
             }catch (\Exception $e){
-                var_dump($e->getMessage());die;
                 $this->addLog($url, 'log', false, $e->getMessage());
             }
         }
         return '';
     }
 
-    public static function uploadOss($url)
+    public function uploadOss($url)
     {
         $bucket = \Yii::$app->params['oss']['image']['bucket'];
         $ossClient = Aliyunoss::getOssClient();
-        if($filePath = self::get_file($url, '/tmp')){
-            $result = $ossClient->putObject($bucket, basename($filePath), $filePath);
+        if($filePath = self::get_file($url, '/tmp/joke')){
+            $mimeType = FileHelper::getMimeType($filePath);
+            $ext = explode('/', $mimeType)[1];
+            $md5File = md5_file($filePath);
+            $ossPathEntity = $this->ossDir . $md5File.'.'.$ext;
+            $ossClient->uploadFile($bucket, $ossPathEntity, $filePath);
+            return [
+                'md5' =>$md5File,
+                'mime' =>$mimeType,
+                'entity' =>$ossPathEntity,
+            ];
+        }else{
+            return [];
         }
-        var_dump($result);
-        die;
     }
 
     public static function get_file($url, $folder = "./") {
