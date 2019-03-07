@@ -9,7 +9,12 @@
 namespace console\models;
 
 
+use common\components\Aliyunoss;
 use Goutte\Client;
+use yii\helpers\FileHelper;
+use yii\helpers\Inflector;
+use yii\helpers\Json;
+use yii\helpers\Markdown;
 
 class Jokeji_imgSpider extends ImageSpider
 {
@@ -75,7 +80,7 @@ class Jokeji_imgSpider extends ImageSpider
                     if($a){
                         $u = $this->baseUrl . '/' . ltrim(trim($a->attr('href')), '/');
                         if(!$this->isGathered($u)){
-                            $this->enqueue($u, 'jokeji_gaoxiao');
+                            $this->enqueue($u, 'jokeji_img');
                         }
                     }
                 }catch (\Exception $e){
@@ -83,5 +88,76 @@ class Jokeji_imgSpider extends ImageSpider
                 }
             }
         });
+    }
+
+    public function getContent($url){
+        $client = new Client;
+        $crawler = $client->request('GET', $url);
+        $node = $crawler->filter('.pic_pview')->eq(0);
+        if($node){
+            try{
+                $category = $node->filter('h2 a')->eq(1)->text();
+                $category = trim($category);
+
+                $title = $node->filter('h2')->eq(0)->text();
+                $titleArr = explode('->', $title);
+                $title = trim(end($titleArr));
+
+                $time = $node->filter('.pic_fx span')->text();
+                $time = strtotime(str_replace('发布时间：', '', $time));
+
+                $contentNode = $node->filter('.pic_pview ul');
+                $content = $contentNode->html();
+//echo $content."\n";die;
+                $img = $node->filter('li img');
+                $img->each(function ($img_node) use($content){
+                    $url = $this->baseUrl . '/'.ltrim($img_node->attr('src'), '/');
+                    static::uploadOss($url);
+                });
+                die;
+
+                if($category && $title && $time && $content){
+                    return json_encode(['category'=>$category,'title'=>$title,'content'=>$content,'time'=>$time, 'source'=>$this->name, 'author'=>isset($name) ? $name : $this->name]);
+                }
+            }catch (\Exception $e){
+                var_dump($e->getMessage());die;
+                $this->addLog($url, 'log', false, $e->getMessage());
+            }
+        }
+        return '';
+    }
+
+    public static function uploadOss($url)
+    {
+        $bucket = \Yii::$app->params['oss']['image']['bucket'];
+        $ossClient = Aliyunoss::getOssClient();
+        if($filePath = self::get_file($url, '/tmp')){
+            $result = $ossClient->putObject($bucket, basename($filePath), $filePath);
+        }
+        var_dump($result);
+        die;
+    }
+
+    public static function get_file($url, $folder = "./") {
+        $destination_folder = $folder . '/'; // 文件下载保存目录，默认为当前文件目录
+        if (!is_dir($destination_folder)) { // 判断目录是否存在
+            FileHelper::createDirectory($destination_folder);// 如果没有就建立目录
+        }
+        $newfname = $destination_folder . basename($url); // 取得文件的名称
+        $file = fopen ($url, "rb"); // 远程下载文件，二进制模式
+        if ($file) { // 如果下载成功
+            $newf = fopen ($newfname, "wb"); // 远在文件文件
+            if ($newf) // 如果文件保存成功
+                while (!feof($file)) { // 判断附件写入是否完整
+                    fwrite($newf, fread($file, 1024 * 8), 1024 * 8); // 没有写完就继续
+                }
+        }
+        if ($file) {
+            fclose($file); // 关闭远程文件
+        }
+        if ($newf) {
+            fclose($newf); // 关闭本地文件
+        }
+        return $newfname;
     }
 }

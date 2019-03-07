@@ -6,9 +6,9 @@ return [
     'oss' => [
         'accessKeyId'=>'LTAIFNyzUbOuITtB',
         'accessKeySecret'=>'l4VUragRbpjKLWVQCsrNO2Wl4GOpJV',
+        'endPoint' => 'oss-cn-beijing.aliyuncs.com',
         'image' => [
             'bucket' => 'sophienice-img',
-            'endPoint' => 'oss-cn-beijing.aliyuncs.com',
         ],
     ],
 ];

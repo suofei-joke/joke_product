@@ -9,12 +9,14 @@
 namespace console\controllers;
 
 
+use console\models\Jokeji_imgSpider;
 use yii\console\Controller;
 
 class TestController extends Controller
 {
     public function actionTest()
     {
-        \Yii::$app->aliyunoss->test();
+        $model = new Jokeji_imgSpider();
+        $model->getContent('http://gaoxiao.jokeji.cn/GrapHtml/quweigaoxiao/20181220222051.htm');
     }
 }
