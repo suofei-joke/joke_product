@@ -22,6 +22,7 @@ class TestController extends Controller
 //
 //        var_dump(FileHelper::getExtensionsByMimeType($mime));die;
         $model = new Jokeji_imgSpider();
-        $model->getContent('http://gaoxiao.jokeji.cn/GrapHtml/quweigaoxiao/20181220222051.htm');
+        $result = $model->getContent('http://gaoxiao.jokeji.cn/GrapHtml/quweigaoxiao/20181220222051.htm');
+        var_dump(json_decode($result, true));
     }
 }

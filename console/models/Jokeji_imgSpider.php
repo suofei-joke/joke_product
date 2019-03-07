@@ -10,6 +10,7 @@ namespace console\models;
 
 
 use common\components\Aliyunoss;
+use common\models\ArticleEntity;
 use Goutte\Client;
 use yii\helpers\FileHelper;
 
@@ -138,6 +139,9 @@ class Jokeji_imgSpider extends ImageSpider
             $mimeType = FileHelper::getMimeType($filePath);
             $ext = explode('/', $mimeType)[1];
             $md5File = md5_file($filePath);
+            if(ArticleEntity::find()->where(['md5'=>$md5File])->exists()){
+                return [];
+            }
             $ossPathEntity = $this->ossDir . $md5File.'.'.$ext;
             $ossClient->uploadFile($bucket, $ossPathEntity, $filePath);
             return [
