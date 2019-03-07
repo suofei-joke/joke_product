@@ -34,7 +34,6 @@ class Jokeji_imgSpider extends ImageSpider
         if ($pages) {
             foreach ($pages as $p) {
                 $this->urls($p);
-                die;
             }
         }
     }
